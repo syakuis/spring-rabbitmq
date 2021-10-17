@@ -28,93 +28,101 @@ buildscript {
     }
 }
 
-wrapper {
-    gradleVersion = "6.5"
-}
+subprojects {
+    wrapper {
+        gradleVersion = "6.5"
+    }
 
-apply plugin: "java"
-apply plugin: "java-library"
-apply plugin: "application"
-apply plugin: "idea"
-apply plugin: "io.franzbecker.gradle-lombok"
-apply plugin: "org.springframework.boot"
-apply plugin: "io.spring.dependency-management"
+    apply plugin: "java"
+    apply plugin: "java-library"
+    apply plugin: "application"
+    apply plugin: "idea"
+    apply plugin: "io.franzbecker.gradle-lombok"
+    apply plugin: "org.springframework.boot"
+    apply plugin: "io.spring.dependency-management"
 
-idea {
-    module {
-        inheritOutputDirs = true
-        outputDir = compileJava.destinationDir
-        testOutputDir = compileTestJava.destinationDir
+    idea {
+        module {
+            inheritOutputDirs = true
+            outputDir = compileJava.destinationDir
+            testOutputDir = compileTestJava.destinationDir
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    group groupId
+    version versionName
+
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+
+    compileJava.options.encoding = 'UTF-8'
+
+    configurations {
+        implementation.exclude module: "spring-boot-starter-tomcat"
+        testImplementation.exclude group: "junit", module: "junit"
+        querydsl.extendsFrom compileClasspath
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
+    dependencies {
+        implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+        implementation "org.mapstruct.extensions.spring:mapstruct-spring-annotations:0.1.0"
+
+        compileOnly "org.projectlombok:lombok:${lombokVersion}"
+        testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+
+        annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+        annotationProcessor "org.mapstruct.extensions.spring:mapstruct-spring-annotations:0.1.0"
+        annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+        annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+
+        testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+        testAnnotationProcessor "org.mapstruct.extensions.spring:mapstruct-spring-annotations:0.1.0"
+        testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+        testAnnotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+
+        annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+        implementation "org.springframework.boot:spring-boot-starter-validation"
+
+        implementation "org.springframework.boot:spring-boot-starter-undertow"
+        implementation "org.springframework.boot:spring-boot-starter-web"
+        // or implementation "org.springframework.boot:spring-boot-starter"
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
+
+        testImplementation "org.springframework.cloud:spring-cloud-starter-contract-stub-runner"
+
+        implementation "org.springframework.boot:spring-boot-starter-amqp"
+        implementation "org.springframework.amqp:spring-rabbit-test"
+    }
+
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+        systemProperty 'spring.profiles.active', 'test'
+    }
+
+    application {
+        mainClass = "${groupId}.Application"
+    }
+
+    bootJar {
+        enabled = true
+        launchScript()
+    }
+
+    jar {
+        enabled false
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
-group groupId
-version versionName
-
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
-
-compileJava.options.encoding = 'UTF-8'
-
-configurations {
-    implementation.exclude module: "spring-boot-starter-tomcat"
-    testImplementation.exclude group: "junit", module: "junit"
-    querydsl.extendsFrom compileClasspath
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-}
-
-dependencies {
-    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
-    implementation "org.mapstruct.extensions.spring:mapstruct-spring-annotations:0.1.0"
-
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
-    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
-
-    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
-    annotationProcessor "org.mapstruct.extensions.spring:mapstruct-spring-annotations:0.1.0"
-    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
-
-    testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
-    testAnnotationProcessor "org.mapstruct.extensions.spring:mapstruct-spring-annotations:0.1.0"
-    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-    testAnnotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
-
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-    implementation "org.springframework.boot:spring-boot-starter-validation"
-
-    implementation "org.springframework.boot:spring-boot-starter-undertow"
-    implementation "org.springframework.boot:spring-boot-starter-web"
-    // or implementation "org.springframework.boot:spring-boot-starter"
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
-
-    testImplementation "org.springframework.cloud:spring-cloud-starter-contract-stub-runner"
-
-    implementation "org.springframework.boot:spring-boot-starter-amqp"
-    implementation "org.springframework.amqp:spring-rabbit-test"
-}
-
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-    systemProperty 'spring.profiles.active', 'test'
-}
-
-application {
-    mainClass = "${groupId}.Application"
-}
-
-jar {
-    enabled true
-}
