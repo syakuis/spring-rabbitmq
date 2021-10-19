@@ -1,7 +1,7 @@
 package io.github.syakuis.producer.push;
 
 import io.github.syakuis.producer.push.model.PushMessagePayload;
-import io.github.syakuis.producer.push.service.PushProducerService;
+import io.github.syakuis.producer.push.service.RetryPushProducerService;
 import io.github.syakuis.producer.push.support.PushSchedulerSupport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,16 +16,16 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/push")
-public class PushRestController {
+@RequestMapping("/retry-push")
+public class RetryPushRestController {
     private final PushSchedulerSupport pushSchedulerSupport;
-    private final PushProducerService pushProducerService;
+    private final RetryPushProducerService retryPushProducerService;
 
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void effect(@PathVariable("id") String id,  @RequestBody MultiValueMap<String, Object> parameters) {
+    public void effect(@PathVariable("id") String id, @RequestBody MultiValueMap<String, Object> parameters) {
         log.debug("{} : Start", id);
-        Runnable runnable = () -> pushProducerService.send(PushMessagePayload.builder()
+        Runnable runnable = () -> retryPushProducerService.send(PushMessagePayload.builder()
             .message(parameters.toString())
             .build());
 

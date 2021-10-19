@@ -17,20 +17,20 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
-public class PushRabbitConfiguration {
+public class RetryPushRabbitConfiguration {
     private final MessageConverter jsonMessageConverter;
 
-    public static final String EXCHANGE_NAME = "exchange.producer-server.push";
+    public static final String EXCHANGE_NAME = "exchange.producer-server.retry-push";
 
     @Bean
-    public FanoutExchange pushExchange() {
+    public FanoutExchange retryPushExchange() {
         return ExchangeBuilder
             .fanoutExchange(EXCHANGE_NAME)
             .build();
     }
 
     @Bean
-    public RabbitTemplate pushRabbitTemplate(ConnectionFactory connectionFactory) {
+    public RabbitTemplate retryPushRabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setExchange(EXCHANGE_NAME);
         rabbitTemplate.setMessageConverter(jsonMessageConverter);

@@ -13,8 +13,6 @@ logging:
       total-size-cap: 20GB
       max-history: 30
   level:
-    root: info
-    org.springframework: info
     org.springframework.web: info
     io.github.syakuis: trace
 server:

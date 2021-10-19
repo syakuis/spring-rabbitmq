@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class PushProducerService extends AbstractPushProducerService {
+public class RetryPushProducerService extends AbstractPushProducerService {
     @Autowired
-    public PushProducerService(@Qualifier("pushRabbitTemplate") RabbitTemplate rabbitTemplate) {
+    public RetryPushProducerService(@Qualifier("retryPushRabbitTemplate") RabbitTemplate rabbitTemplate) {
         super(rabbitTemplate);
     }
 }
