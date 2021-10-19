@@ -3,6 +3,7 @@ package io.github.syakuis.producer.push.infrastucture.amqp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.ExchangeBuilder;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -20,12 +21,12 @@ import org.springframework.context.annotation.Configuration;
 public class PushRabbitConfiguration {
     private final MessageConverter jsonMessageConverter;
 
-    public static final String EXCHANGE_NAME = "topic-exchange.consumer-server.push";
+    public static final String EXCHANGE_NAME = "exchange.producer-server.push";
 
     @Bean
-    public TopicExchange pushExchange() {
+    public FanoutExchange pushExchange() {
         return ExchangeBuilder
-            .topicExchange(EXCHANGE_NAME)
+            .fanoutExchange(EXCHANGE_NAME)
             .build();
     }
 

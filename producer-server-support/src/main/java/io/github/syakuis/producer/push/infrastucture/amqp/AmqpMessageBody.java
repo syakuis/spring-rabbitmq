@@ -14,6 +14,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public class AmqpMessageBody<T> {
-    private final String method;
+    private final AmqpMethod method;
     private final T payload;
 }

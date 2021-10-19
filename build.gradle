@@ -34,29 +34,19 @@ subprojects {
     }
 
     apply plugin: "java"
-    apply plugin: "java-library"
     apply plugin: "application"
-    apply plugin: "idea"
     apply plugin: "io.franzbecker.gradle-lombok"
     apply plugin: "org.springframework.boot"
     apply plugin: "io.spring.dependency-management"
     apply plugin: "org.sonarqube"
     apply plugin: "jacoco"
 
-    idea {
-        module {
-            inheritOutputDirs = true
-            outputDir = compileJava.destinationDir
-            testOutputDir = compileTestJava.destinationDir
-        }
-    }
-
     repositories {
         mavenCentral()
     }
 
-    group groupId
-    version versionName
+    group = groupId
+    version = versionName
 
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
@@ -66,7 +56,6 @@ subprojects {
     configurations {
         implementation.exclude module: "spring-boot-starter-tomcat"
         testImplementation.exclude group: "junit", module: "junit"
-        querydsl.extendsFrom compileClasspath
     }
 
     dependencyManagement {
@@ -136,12 +125,11 @@ subprojects {
     }
 
     bootJar {
-        enabled = true
-        launchScript()
+        enabled = false
     }
 
     jar {
-        enabled false
+        enabled = false
     }
 }
 

@@ -22,16 +22,16 @@ import java.io.IOException;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class PushMessageConsumer {
+public class PushMessageConsumer2 {
     private final ObjectMapper objectMapper;
 
     @RabbitListener(bindings = @QueueBinding(
-        value = @Queue(value = "queue.consumer-server.push", durable = "true"),
+        value = @Queue(value = "queue.consumer-server.push2", durable = "true"),
         exchange = @Exchange(value = "exchange.producer-server.push", type = ExchangeTypes.FANOUT)
     ))
     public void invoker(final Message message) throws IOException {
         AmqpMessageBody<PushMessagePayload> amqpMessageBody = objectMapper.readValue(message.getBody(), AmqpMessageBody.class);
 
-        log.debug("consumer: {}", amqpMessageBody);
+        log.debug("consumer2: {}", amqpMessageBody);
     }
 }
