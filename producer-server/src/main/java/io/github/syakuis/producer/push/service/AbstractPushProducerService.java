@@ -5,7 +5,11 @@ import io.github.syakuis.producer.push.infrastucture.amqp.AmqpMethod;
 import io.github.syakuis.producer.push.model.PushMessagePayload;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.support.converter.MessageConverter;
+
+import java.util.Date;
 
 /**
  * @author Seok Kyun. Choi.
@@ -14,12 +18,16 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 @Slf4j
 @RequiredArgsConstructor
 public class AbstractPushProducerService {
-    private final RabbitTemplate rabbitTemplate;
+    private final MessageConverter messageConverter;
+    private final AmqpTemplate amqpTemplate;
 
     public void send(PushMessagePayload pushMessagePayload) {
-        rabbitTemplate.convertAndSend(AmqpMessageBody.builder()
-                .method(AmqpMethod.CREATE)
-                .payload(pushMessagePayload)
-            .build());
+        MessageProperties headers = new MessageProperties();
+        headers.setTimestamp(new Date());
+
+        amqpTemplate.convertAndSend(messageConverter.toMessage(AmqpMessageBody.builder()
+            .method(AmqpMethod.CREATE)
+            .payload(pushMessagePayload)
+            .build(), headers));
     }
 }

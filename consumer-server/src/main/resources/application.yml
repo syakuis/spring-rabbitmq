@@ -22,7 +22,15 @@ spring:
     banner-mode: console
   rabbitmq:
     host: localhost
-    username: local
+    username: syaku
     password: 1234
     port: 5672
     connection-timeout: 0
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 3s
+          max-attempts: 2
+          max-interval: 10s
+          multiplier: 2

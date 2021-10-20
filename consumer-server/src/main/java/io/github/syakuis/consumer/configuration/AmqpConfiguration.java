@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 2021-05-21
  */
 @Configuration
-public class AmqpMessageConverterConfiguration {
+public class AmqpConfiguration {
 
     @Bean
     public MessageConverter jsonMessageConverter(ObjectMapper objectMapper) {

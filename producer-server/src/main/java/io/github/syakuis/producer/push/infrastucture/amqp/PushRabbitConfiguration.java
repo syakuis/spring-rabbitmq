@@ -2,8 +2,7 @@ package io.github.syakuis.producer.push.infrastucture.amqp;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.ExchangeBuilder;
-import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.MessageConverter;
@@ -18,22 +17,32 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 @Configuration
 public class PushRabbitConfiguration {
-    private final MessageConverter jsonMessageConverter;
-
-    public static final String EXCHANGE_NAME = "exchange.producer-server.push";
+    private final MessageConverter messageConverter;
+    public static final String EXCHANGE_NAME = "exchange.push";
+    public static final String QUEUE_NAME = "queue.push";
 
     @Bean
-    public FanoutExchange pushExchange() {
+    DirectExchange pushExchange() {
         return ExchangeBuilder
-            .fanoutExchange(EXCHANGE_NAME)
+            .directExchange(EXCHANGE_NAME)
             .build();
     }
 
     @Bean
-    public RabbitTemplate pushRabbitTemplate(ConnectionFactory connectionFactory) {
+    Queue pushQueue() {
+        return QueueBuilder.durable(QUEUE_NAME).build();
+    }
+
+    @Bean
+    Binding pushBinding() {
+        return BindingBuilder.bind(pushQueue()).to(pushExchange()).withQueueName();
+    }
+
+    @Bean
+    AmqpTemplate pushRabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(messageConverter);
         rabbitTemplate.setExchange(EXCHANGE_NAME);
-        rabbitTemplate.setMessageConverter(jsonMessageConverter);
         return rabbitTemplate;
     }
 }

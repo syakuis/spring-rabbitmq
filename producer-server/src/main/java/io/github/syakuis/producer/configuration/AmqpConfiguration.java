@@ -8,11 +8,10 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @author Seok Kyun. Choi.
- * @since 2021-05-21
+ * @since 2021-10-20
  */
 @Configuration
-public class AmqpMessageConverterConfiguration {
-
+class AmqpConfiguration {
     @Bean
     public MessageConverter jsonMessageConverter(ObjectMapper objectMapper) {
         return new Jackson2JsonMessageConverter(objectMapper);
