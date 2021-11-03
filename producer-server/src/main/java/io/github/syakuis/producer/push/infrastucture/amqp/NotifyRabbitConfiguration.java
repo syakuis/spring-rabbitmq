@@ -41,20 +41,7 @@ public class NotifyRabbitConfiguration {
 
     @Bean
     AmqpTemplate notifyRabbitTemplate(ConnectionFactory connectionFactory) {
-       /* RetryTemplate retryTemplate = new RetryTemplate();
-
-        SimpleRetryPolicy policy = new SimpleRetryPolicy();
-        policy.setMaxAttempts(3);
-        retryTemplate.setRetryPolicy(policy);
-
-        ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
-        backOffPolicy.setInitialInterval(Duration.ofSeconds(3L).toMillis());
-        backOffPolicy.setMaxInterval(Duration.ofSeconds(10L).toMillis());
-        backOffPolicy.setMultiplier(2);
-        retryTemplate.setBackOffPolicy(backOffPolicy);*/
-
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-//        rabbitTemplate.setRetryTemplate(retryTemplate);
         rabbitTemplate.setMessageConverter(messageConverter);
 
         rabbitTemplate.setExchange(NotifyMessageProperties.EXCHANGE_NAME);

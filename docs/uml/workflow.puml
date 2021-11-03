@@ -1,8 +1,8 @@
 @startuml
 participant "Producer" as pub
-database "push-queue" as q1
+database "queue" as q1
 participant "Consumer" as sub
-database "push-dead-queue" as q2
+database "dead-queue" as q2
 participant "Dead Consumer" as sub2
 participant "Slack Messenger" as msg
 
@@ -16,11 +16,10 @@ end alt
 q2 ->> sub2: no ack
 sub2 -> sub2: 저장
 alt error
-sub2 -> sub2: retry 3회 진행후
-note right
-retry 무제한
-end note
+sub2 -> sub2: retry 3회
+else 재시도 만료
 sub2 ->> msg: 메신저 알림
-end alt
+else 성공
 q2 <<-- sub2: ack
+end alt
 @enduml

@@ -22,6 +22,6 @@ spring:
     banner-mode: console
   rabbitmq:
     host: localhost
-    username: syaku
+    username: admin
     password: 1234
     port: 5672

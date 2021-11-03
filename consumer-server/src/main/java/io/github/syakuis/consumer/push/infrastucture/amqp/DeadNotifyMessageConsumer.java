@@ -5,7 +5,11 @@ import io.github.syakuis.producer.push.model.NotifyMessagePayload;
 import io.github.syakuis.producer.push.model.NotifyMessageProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.Exchange;
+import org.springframework.amqp.rabbit.annotation.Queue;
+import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
@@ -34,8 +38,13 @@ public class DeadNotifyMessageConsumer {
         store.put("count", count);
     }
 
-    @RabbitListener(queues = NotifyMessageProperties.DEAD_LETTER_QUEUE_NAME, ackMode = "MANUAL"
-//        , containerFactory = "deadListenerContainer"
+    @RabbitListener(
+        bindings = @QueueBinding(
+            exchange = @Exchange(value = NotifyMessageProperties.DEAD_LETTER_EXCHANGE_NAME, type = ExchangeTypes.FANOUT),
+            value = @Queue(value = NotifyMessageProperties.DEAD_LETTER_QUEUE_NAME)
+        )
+        , ackMode = "MANUAL"
+        , containerFactory = "listenerContainer"
     )
     public void invoker(final Message message) throws IOException {
         NotifyMessagePayload amqpMessageBody = objectMapper.readValue(message.getBody(), NotifyMessagePayload.class);

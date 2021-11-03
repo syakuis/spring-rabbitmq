@@ -17,7 +17,7 @@ public class DeadNotifyRestController {
 
     @PostMapping("/{count}")
     @ResponseStatus(HttpStatus.OK)
-    public void message(@PathVariable("count") Long count) throws Exception {
+    public void message(@PathVariable("count") Long count) {
         deadNotifyMessageConsumer.setCount(count);
     }
 }
