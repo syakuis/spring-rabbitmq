@@ -1,0 +1,22 @@
+logging:
+  level:
+    org.springframework.web: info
+    io.github.syakuis: debug
+spring:
+  main:
+    banner-mode: console
+  config:
+    import:
+      - private.yml
+  rabbitmq:
+    host: localhost
+    username: admin
+    password: 1234
+    port: 5672
+    connection-timeout: 60000
+    requested-heart-beat: 60
+rabbitmq:
+  name:
+    health-check:
+      server-info-exchange: syaku.server-info-exchange
+      server-info-queue: syaku.server-info-queue

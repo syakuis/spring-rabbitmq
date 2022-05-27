@@ -1,7 +1,0 @@
-# Production profile
-logging:
-  level:
-    io.github.syakuis: info
-spring:
-  main:
-    banner-mode: log
