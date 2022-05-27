@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets
 @Configuration(proxyBeanMethods = false)
 class WebMvcConfiguration(private val objectMapper: ObjectMapper) : DelegatingWebMvcConfiguration() {
 
-    override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>?>) {
+    override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>>) {
         val stringConverter = StringHttpMessageConverter(StandardCharsets.UTF_8)
         converters.add(stringConverter)
         converters.add(MappingJackson2HttpMessageConverter(objectMapper))

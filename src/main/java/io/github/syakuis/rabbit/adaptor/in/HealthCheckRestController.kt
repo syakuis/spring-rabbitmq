@@ -17,4 +17,11 @@ class HealthCheckRestController(val healthCheckService: BasicHealthCheckService)
     fun basicRun(@RequestBody limit: Int) {
         healthCheckService.run(limit)
     }
+
+    @PostMapping("/async")
+    fun asyncRun(@RequestBody limit: Int) {
+        healthCheckService.asyncRun(limit)
+    }
+
+    // todo socket 작업 (소켓 통신으로 구독 소비 지연)
 }
