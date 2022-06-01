@@ -5,9 +5,6 @@ logging:
 spring:
   main:
     banner-mode: console
-  config:
-    import:
-      - private.yml
   rabbitmq:
     host: localhost
     username: admin

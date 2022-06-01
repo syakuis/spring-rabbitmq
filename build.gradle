@@ -86,10 +86,10 @@ processResources {
 }
 
 dependencies {
-    implementation "org.springframework.boot:spring-boot-starter-webflux"
-    implementation "org.springframework.boot:spring-boot-starter-undertow"
     implementation "org.springframework.boot:spring-boot-starter-web"
-    // or implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-undertow"
+    implementation "org.springframework.boot:spring-boot-starter-webflux"
+    implementation "org.springframework.boot:spring-boot-starter-websocket"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"

@@ -11,7 +11,11 @@ import org.springframework.stereotype.Component
  * @since 2022-05-27
  */
 @Component
-class BasicHealthCheckRabbitProducer(val defaultRabbitTemplate: AmqpTemplate, val defaultAsyncRabbitTemplate: AsyncAmqpTemplate, val rabbitName: RabbitName) {
+class BasicHealthCheckRabbitProducer(
+    val defaultRabbitTemplate: AmqpTemplate,
+    val defaultAsyncRabbitTemplate: AsyncAmqpTemplate,
+    val rabbitName: RabbitName
+) {
 
     fun asyncServerInfo(serverInfoMessage: ServerInfoMessage) {
         defaultAsyncRabbitTemplate.convertSendAndReceive<ServerInfoMessage>(
@@ -21,11 +25,14 @@ class BasicHealthCheckRabbitProducer(val defaultRabbitTemplate: AmqpTemplate, va
         )
     }
 
-    fun serverInfo(serverInfoMessage: ServerInfoMessage) {
+    fun serverInfo(serverInfoMessage: ServerInfoMessage, quota: Int) {
         defaultRabbitTemplate.convertAndSend(
             rabbitName.healthCheck.serverInfoExchange,
             rabbitName.healthCheck.serverInfoQueue,
             serverInfoMessage
-        )
+        ) { message ->
+            message.messageProperties.setHeader("quota", quota)
+            message
+        }
     }
 }

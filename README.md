@@ -1,17 +1,22 @@
 # Spring RabbitMQ
 
+## prefetch count
+
+기본 값 250
+
+하나의 컨슈머가 처리할 수 있는 일의 량
+
 ## AsyncRabbitTemplate
 
-AsyncRabbitTemplate 클래스는 비차단으로 발행을 하면 ListenableFuture 콜백을 받을 수 있다.
+AsyncRabbitTemplate 클래스는 비차단으로 발행되며 ListenableFuture 클래스로 콜백받을 수 있다.
 
-구독 속도는 RabbitTemplate 에 비해 매우 느려지는 것 같다.
+발행과 구독을 동시에 처리하므로 RabbitTemplate 에 비해 지연이 많이 발생된다.
 
 ## 동시적으로 구독하기
 
-- factory.setConcurrentConsumers(20)
-- factory.setTaskExecutor(healthCheckTaskExecutor())
+동시적으로 구독할 갯수를 설정하고 `factory.setConcurrentConsumers(20)` 구독 후 처리에 대한 비동기 스레드 풀을 `factory.setTaskExecutor(healthCheckTaskExecutor())` 설정한다.
 
-위 두가지 설정이 필요하다. 순서를 보장하지 않아도 될때 사용해야 한다.
+동시적으로 구독할 경우 순서를 보장하지 않는 다.
 
 ```
 @Bean

@@ -1,6 +1,7 @@
 package io.github.syakuis.rabbit.application
 
 import io.github.syakuis.rabbit.adaptor.out.BasicHealthCheckRabbitProducer
+import io.github.syakuis.rabbit.adaptor.out.HealthCheckWebSocketSender
 import io.github.syakuis.rabbit.model.ServerInfoDto
 import io.github.syakuis.rabbit.model.ServerInfoMessage
 import org.slf4j.LoggerFactory
@@ -43,7 +44,7 @@ class BasicHealthCheckService(val healthCheckRabbitProducer: BasicHealthCheckRab
     fun run(limit: Int) {
         log.info("[로그] 헬스 체크를 위한 호스트 정보를 준비중입니다.")
         for (i in 0..limit) {
-            healthCheckRabbitProducer.serverInfo(toMessage())
+            healthCheckRabbitProducer.serverInfo(toMessage(), limit)
         }
         log.info("[로그] 헬스 체크를 위한 호스트 정보를 발행했습니다.")
     }
